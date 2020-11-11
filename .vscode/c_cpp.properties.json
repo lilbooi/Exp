@@ -1,0 +1,37 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceRoot}",
+                "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include/c++",
+                "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include/x86_64-w64-mingw32",
+                "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include/backward",
+                "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include/include",
+                "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include/tr1",
+                "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "__GNUC__=6",
+                "__cdecl=__attribute__((__cdecl__))"
+            ],
+            "intelliSenseMode": "msvc-x64",
+            "browse": {
+                "path": [
+                    "${workspaceRoot}",
+                    "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include/c++",
+                    "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include/x86_64-w64-mingw32",
+                    "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include/backward",
+                    "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include/include",
+                    "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include/tr1",
+                    "E:/software/MinGW/lib/gcc/mingw32/9.2.0/include"
+                ]
+            },
+            "limitSymbolsToIncludedHeaders": true,
+            "databaseFilename": ""
+        }
+    ],
+    "version": 3
+}
