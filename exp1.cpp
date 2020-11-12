@@ -9,12 +9,13 @@ const string keyWord[35]={"and" ,"array","begin","bool","call","case","char","co
 "var","while","write"};
 const int MAXN=105;
 string token;
-int tlen;  // tokenÈïøÂ∫¶
-int dif;  // Âè™ÊúâÊ†áËØÜÁ¨¶ÂíåÂ∏∏Êï∞ÊúâÊòæÁ§∫ÔºåÂπ∂‰∏îÈÄöËøáÊï∞Â≠óÊù•Âå∫ÂàÜ‰ªñ‰ª¨ÁöÑ‰∏çÂêå„ÄÇ
-int row;  // ÂΩìÂâçÂú®Â§ÑÁêÜÁ¨¨Âá†Ë°å
-int col;  // ÂΩìÂâçÂú®Â§ÑÁêÜÁ¨¨Âá†Âàó
-char ch;  // ÂΩìÂâçË¶ÅÂ§ÑÁêÜÁöÑÂ≠óÁ¨¶
-bool flag=true; // ÂΩìÂâçchÊòØÂê¶ÊúâË¢´Â§ÑÁêÜËøá or ÂΩìÂâçÊòØÂê¶Ê≤°Êúâch
+int tlen;  // token len
+int dif;  // id∫Õ≥£ ˝ ≤ªÕ¨µƒ∏ˆ ˝
+int row=1;  //  ¥ÌŒÛµ⁄º∏––
+int col;  // ¥ÌŒÛµ⁄º∏¡–
+char ch;  // µ±«∞“™¥¶¿Ìµƒchar
+bool flag=true; // true£∫µ±«∞ch“—æ≠¥¶¿Ì¡À£¨false: ªπŒ¥¥¶¿Ì
+// À´ΩÁ∑˚
 struct BI{
     char first;
     char second;
@@ -24,14 +25,20 @@ BI biar[5] = {{'*','/',41},{'.','.',46},{'/','*',48},{':','=',50},{'>','=',57}};
 map<char, BI> BiDic={{'*',biar[0]}, {'.',biar[1]},{ '/',biar[2]},{ ':',biar[3]},{ '>',biar[4]}};
 map<char,int> SiDic={{'(',39}, {')',40}, {'+',43},{',',44},{'-',45},{';',52},{'=',56},{'[',59},{']',60}};
 
+map<string, int> TokenDic; 
+
 void initToken(){
     tlen=0;
     token="";
 }
+
 bool judgeBlank(){
     if(ch==' '||ch=='\t'||ch=='\n')
         return true;
     else return false;
+}
+bool isRop(){
+    return ch=='<'||ch=='>'||ch=='=';
 }
 
 int isKeyWord(){
@@ -44,7 +51,6 @@ int isKeyWord(){
     return 0;
 }
 
-// Áî®‰∫éÂâçÈù¢ÊúâÂçïËØçÁöÑÊÉÖÂÜµ
 void solveBlank(){
     if(ch==' '||ch=='\t')
         col++;
@@ -52,33 +58,37 @@ void solveBlank(){
         row++;
         col=0;
     }
+    flag=true;
 }
 
 void printBi(int x){
+    col++;
     if(x==36||x==37||x==38){
-        printf("(%d,%d)\n",x,++dif);
+        if(TokenDic.count(token))
+            printf("(%d,%d)\n",x,TokenDic[token]);
+        else 
+            printf("(%d,%d)\n",x,TokenDic[token]=++dif);
         // cout<<"!"<<token<<"!"<<endl;
     }
     else if(x>0)
     {
         printf("(%d,-)\n",x);
-        col++;
     }
-    // -1: ÈùûÊ≥ïÂ≠óÁ¨¶
-    // -2ÔºöÂ≠óÁ¨¶Â∏∏ÁÜüÁº∫Âè≥ËæπÂçïÂºïÂè∑
-    // -3ÔºöÊ≥®ÈáäÈÉ®ÂàÜÁº∫Âè≥ËæπÁïåÁ¨¶
+    // -1: ∑«∑®◊÷∑˚£¨º¥≤ª «SAMPLE◊÷∑˚ºØµƒ∑˚∫≈
+    // -2£∫◊÷∑˚≥£ ˝»±”“±ﬂµƒµ•“˝∫≈
+    // -3£∫◊¢ Õ≤ø∑÷»±”“±ﬂµƒΩÁ∑˚*/
     else{
-        printf("Á¨¨%dË°åÔºåÁ¨¨%d‰∏™ÂçïËØçÊúâÈîôËØØ\n",row,col);
+        printf("≥ˆœ÷¥Œ∑®¥ÌŒÛ£¨Œª÷√”Îµ⁄%d––£¨µ⁄%d∏ˆ¥ ”Ô\n",row,col);
         if (x==-1){
-            printf("ÈîôËØØÊÄßË¥®ÔºöÈùûÊ≥ïÂ≠óÁ¨¶\n");
+            printf("∑«∑®◊÷∑˚£¨º¥≤ª «SAMPLE◊÷∑˚ºØµƒ∑˚∫≈\n");
             while(ch!=' '&&ch!='\t'&&ch!='\n'){
                 ch=getchar();
             }
         }
         else if(x==-2)
-            printf("ÈîôËØØÊÄßË¥®ÔºöÂ≠óÁ¨¶Â∏∏Êï∞Áº∫Âè≥ËæπÁöÑÂçïÂºïÂè∑\n");
+            printf("◊÷∑˚≥£ ˝»±”“±ﬂµƒµ•“˝∫≈£¨«“≤ªƒ‹øÁ––\n");
         else
-            printf("ÈîôËØØÊÄßË¥®ÔºöÊ≥®ÈáäÈÉ®ÂàÜÁº∫Âè≥ËæπÁöÑÁïåÁ¨¶*/\n");
+            printf("◊¢ Õ≤ø∑÷»±”“±ﬂµƒΩÁ∑˚*/£¨«“≤ªƒ‹øÁ––\n");
         
     }
     
@@ -107,10 +117,11 @@ void judgeToken(){
         if(ch=='\n'){
             col=0;
             row++;
+            // printf("row:%d\n",row);
         }
         ch=getchar();
     }
-    // Êï¥Êï∞ Â∏∏Êï∞
+    //  ˝◊÷≥£ ˝
     if(ch>='0'&& ch<='9'){
         while(ch>='0'&&ch<='9'){
             token+=ch;
@@ -120,62 +131,43 @@ void judgeToken(){
         if(judgeBlank()){
             printBi(37);
             solveBlank();
-            flag=true;
         }
-        else{
-            printBi(-1);
+        else if(ch=='+'||ch=='-'||ch=='*'||ch=='/'||isRop()||ch==';'){
+            printBi(37);
         }
+        else printBi(-1);
     }
-    // ÂçïÁïåÁ¨¶ ÂèåÁïåÁ¨¶
-    else if(ch=='*'||ch=='.'||ch==':'||ch=='/'||ch==':'||ch=='>'){
+    // µ•ΩÁ∑˚
+    else if(ch=='*'||ch=='.'||ch==':'||ch=='>'){
         solveBi();
     }
+    // À´ΩÁ∑˚
     else if(ch=='('||ch==')'||ch=='+'||ch==','||ch=='-'||ch==';'||ch=='='||ch=='['||ch==']')
     {
         printBi(SiDic[ch]);
     }
-    // else if(ch=='(') printBi(39);
-    // else if(ch==')') printBi(40);
-    // else if(ch=='*'){
-    //     ch=getchar();
-    //     if(judgeBlank()){
-    //         printBi(41);
-    //         solveBlank();
-    //     }
-    //     else if(ch=='/') printBi(42);
-    //     else
-    //     {
-    //         printBi(41);
-    //         flag=false;
-    //     }
-    // }
-    // else if(ch=='+') printBi(43);
-    // else if(ch==',') printBi(44);
-    // else if(ch=='-') printBi(45);
-    // else if(ch=='.'){
-    //     ch=getchar()
-    //     if (judgeBlank())
-    //     {
-    //         printBi(46);solveBlank();
-    //     }
-    //     else if(ch=='.') printBi(47);
-    //     else
-    //     {
-    //         printBi(46);flag=false;
-    //     }        
-    // }
-    // else if(ch=='/'){
-    //     ch=getchar();
-    //     if(judgeBlank()) {printBi(48);solveBlank();}
-    //     else if(ch=='*') printBi(49);
-    //     else
-    //     {
-    //         printBi(48);flag=false;
-    //     }
-    // // }
-    // else if(ch==':'){
-
-    // }
+    // ø…ƒ‹µƒannotation
+    else if(ch=='/'){
+        ch = getchar();
+        if(ch=='*'){
+            int isEnd=0;
+            while(ch!='\n'&&isEnd!=2){
+                ch=getchar();
+                if(ch=='*'&&!isEnd) isEnd=1;
+                else if(isEnd==1&&ch!='/') isEnd=0;
+                else if(isEnd==1&&ch=='/') isEnd=2;
+            }
+            if(ch=='\n'){
+                solveBlank();
+                printBi(-3);
+            }
+        }
+        else{
+            flag=false;
+            printBi(48);
+        } 
+        
+    }
     else if(ch=='<'){
         ch = getchar();
         if(judgeBlank())
@@ -192,28 +184,9 @@ void judgeToken(){
             printBi(53);
             flag=false;
         }
-    }
-    // else if(ch=='=') printBi(56);
-    // else if(ch=='>'){
-    //     ch = getchar();
-    //     if(judgeBlank()){
-    //         printBi(57);
-    //         solveBlank();
-    //     }
-    //     else if(ch=='=')
-    //         printBi(58);
-    //     else
-    //     {
-    //         printBi(57);
-    //         flag=false;
-    //     }
-    // }
-    // else if(ch=='[') printBi(59);
-    // else if(ch==']') printBi(60);
-    
-    // Â≠óÁ¨¶Â∏∏Êï∞ 
+    }    
+    // ◊÷∑˚¥Æ≥£ ˝
     else if(ch=='\''){
-        // ‰∏çÂèØË∑®Ë°å
         token+=ch;
         ch=getchar();
         while (ch!='\''&&ch!='\n')
@@ -227,7 +200,7 @@ void judgeToken(){
         }
         else{ token+=ch; printBi(38);}        
     }
-    // Ê†áËØÜÁ¨¶ or ‰øùÁïôÂ≠ó
+    // identifier or keyword
     else if(isalpha(ch)){
         token=ch;
         ch = getchar();
@@ -236,6 +209,7 @@ void judgeToken(){
             ch = getchar();
         }
         int t=-1;
+        flag=false;
         if(t = isKeyWord()){
             printBi(t);
         }
@@ -245,14 +219,13 @@ void judgeToken(){
         }
         else{
             printBi(36);
-            flag=false;
         }
         
     }
 }
 int main()
 {
-    printf("ÂæêÁê¨ÁéÆ 18ËÆ°Áßë1Áè≠ 201830582128\n");
+    printf("–ÏÁ˛Á‚ 18º∆ø∆1∞‡ 201830582128\n");
     char testName[105];
     while(scanf("%s",testName)!=EOF){
         int len=strlen(testName);
